@@ -5,8 +5,8 @@
 int twoStrCompr(const char*, const char*);
 
 int main() {
-    char* str1 = "c";
-    char* str2 = "b";
+    char* str1 = "ccc";
+    char* str2 = "ccca";
     printf("theirs: %d, mine: %d\n", strcmp(str1, str2), twoStrCompr(str1, str2));
     return 0;
     if(twoStrCompr(str1, str2) == 1)
@@ -27,8 +27,8 @@ int twoStrCompr(const char* first, const char* second) {
     int len2 = strlen(second);
     int minLen = len1 < len2? len1: len2;
     for(i = 0; i < minLen; i++) {
-        int ch1 = first[i];
-        int ch2 = second[i];
+        int ch1 = *(first+i);
+        int ch2 = *(second+i);
         valid(ch1);
         valid(ch2);
         if (ch1 < ch2) return 1;
@@ -37,8 +37,8 @@ int twoStrCompr(const char* first, const char* second) {
         return 1;
     } else {
         if(len1 == len2) {
-            printf("%d %d", first[1], second[1]);
-            return first[minLen] <= second[minLen];
+            printf("%d %d", *(first), *(second));
+            return *(first+minLen-1) <= *(second+minLen-1);
         }
     }
     return 0;

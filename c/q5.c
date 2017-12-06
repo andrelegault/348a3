@@ -14,20 +14,20 @@ int twoStrCompr(const char* first, const char* second) {
     int i;
     int len1 = strlen(first);
     int len2 = strlen(second);
-    int minLen;
-    if (len1 < len2)
-        minLen = len1;
-    else
-        minLen = len2;
+    int minLen = len1 < len2? len1: len2;
     for(i = 0; i < minLen; i++) {
-        int ch1 = first[i];
-        int ch2 = second[i];
+        int ch1 = *(first+i);
+        int ch2 = *(second+i);
         valid(ch1);
         valid(ch2);
         if (ch1 < ch2) return 1;
     }
-    if(len1 <= len2) {
+    if(len1 < len2) {
         return 1;
+    } else {
+        if(len1 == len2) {
+            return *(first+minLen-1) <= *(second+minLen-1);
+        }
     }
     return 0;
 }
@@ -98,13 +98,9 @@ void list_selection_sort(struct node **head) {
     print(*(front));
     struct node *it = *(head);
 
-    int i = 6;
     while(!sorted(*(front))) {
-        //printf("hello");
         while(it->next != NULL) {
-            //printf("current is %s", it->data);
             if(strcmp(it->next->data, it->data) < 1) {
-                //printf("should switch %s with %s", it->next->data, it->data);
                 char *tmp = strdup(it->data);
                 char *tmp2 = strdup(it->next->data);
                 it->next->data = tmp;
@@ -114,15 +110,13 @@ void list_selection_sort(struct node **head) {
         }
         it = *(head);
     }
-    printf("sorted list is now");
-    print(*(front));
+    print(*(head));
 }
 
 int sorted(const struct node *head) {
     while(head->next != NULL) {
         int keepSorting = twoStrCompr(head->data, head->next->data);
-        printf("is %s smaller than %s (0->no | 1->yes)? %d\n", head->data, head->next->data, keepSorting);
-        if(strcmp(head->data, head->next->data) > 0) {
+        if(twoStrCompr(head->data, head->next->data) == 0) {
             return 0;
         }
         head = head->next;
@@ -174,9 +168,6 @@ int main() {
     }
     print(head);
 
-    struct node *copy = duplicate(head);
-    list_selection_sort(&copy);
-    return 0;
     char toAdd[20];
     char theWord[20];
     printf("\nAFTER WHICH WORD WOULD YOU LIKE TO ADD AN EXTRA WORD? ");
@@ -196,6 +187,9 @@ int main() {
         delete_node(head, toDelete);
     }
     print(head);
+
+    struct node *copy = duplicate(head);
+    list_selection_sort(&copy);
 
     return 0;
 }
