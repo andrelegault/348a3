@@ -2,6 +2,23 @@
 #include <string.h>
 #include <stdlib.h>
 
+int twoStrCompr(const char* first, const char* second) {
+    int i;
+    int len1 = strlen(first);
+    int len2 = strlen(second);
+    int minLen;
+    if (len1 < len2)
+        minLen = len1;
+    else
+        minLen = len2;
+    for(i = 0; i < minLen; i++) {
+        int ch1 = first[i];
+        int ch2 = second[i];
+        if (ch1 < ch2) return 1;
+    }
+    return 0;
+}
+
 struct node {
     char *data;
     struct node *next;
@@ -63,14 +80,65 @@ void print(struct node *head) {
 }
 
 
-//void list_selection_sort(const node_ptr *list);
+void list_selection_sort(struct node **head) {
+    struct node **front = head;
+    print(*(front));
+    struct node *it = *(head);
+
+    int i = 6;
+    while(!sorted(*(front))) {
+        //printf("hello");
+        while(it->next != NULL) {
+            printf("current is %s", it->data);
+            if(strcmp(it->next->data, it->data) < 1) {
+                printf("should switch %s with %s", it->next->data, it->data);
+                char *tmp = strdup(it->data);
+                char *tmp2 = strdup(it->next->data);
+                it->next->data = tmp;
+                it->data = tmp2;
+            }
+            it = it->next;
+        }
+        it = *(head);
+    }
+    printf("sorted list is now");
+    print(*(front));
+}
+
+int sorted(const struct node *head) {
+    while(head->next != NULL) {
+        if(strcmp(head->data, head->next->data) > 0) {
+            return 0;
+        }
+        head = head->next;
+    }
+    return 1;
+}
+
+struct node* duplicate(const struct node *head) {
+    if(head == NULL) {
+        return NULL;
+    }
+    struct node *newHead = malloc(sizeof(struct node));
+    newHead->data = strdup(head->data);
+    struct node *it = head->next;
+    struct node *follower = newHead;
+    while(it != NULL) {
+        struct node *newLink = malloc(sizeof(struct node));
+        newLink->data = strdup(it->data);
+        follower->next = newLink;
+        it = it->next;
+        follower = follower->next;
+    }
+    return newHead;
+}
 
 int main() {
     struct node *head = NULL;
     char str[20];
     printf("Enter first word (or '.' to end list): ");
     scanf("%s", str);
-    while(str[0] != '.' && strlen(str) != 1) {
+    while(strcmp(&str[0], ".") != 0) {
         char *dst = strdup(str);
         if(head == NULL) {
             head = malloc(sizeof(struct node));
@@ -91,6 +159,9 @@ int main() {
     }
     print(head);
 
+    struct node *copy = duplicate(head);
+    list_selection_sort(&copy);
+    return 0;
     char toAdd[20];
     char theWord[20];
     printf("\nAFTER WHICH WORD WOULD YOU LIKE TO ADD AN EXTRA WORD? ");
@@ -110,5 +181,6 @@ int main() {
         delete_node(head, toDelete);
     }
     print(head);
+
     return 0;
 }
