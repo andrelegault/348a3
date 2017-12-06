@@ -2,6 +2,14 @@
 #include <string.h>
 #include <stdlib.h>
 
+int valid(int ch) {
+    if(!(ch >= 97 && ch <= 122) && !(ch >= 65 && ch <= 90)) {
+        fprintf(stderr, "invalid character");
+        exit(EXIT_FAILURE);
+    }
+    return 1;
+}
+
 int twoStrCompr(const char* first, const char* second) {
     int i;
     int len1 = strlen(first);
@@ -14,7 +22,12 @@ int twoStrCompr(const char* first, const char* second) {
     for(i = 0; i < minLen; i++) {
         int ch1 = first[i];
         int ch2 = second[i];
+        valid(ch1);
+        valid(ch2);
         if (ch1 < ch2) return 1;
+    }
+    if(len1 <= len2) {
+        return 1;
     }
     return 0;
 }
@@ -89,9 +102,9 @@ void list_selection_sort(struct node **head) {
     while(!sorted(*(front))) {
         //printf("hello");
         while(it->next != NULL) {
-            printf("current is %s", it->data);
+            //printf("current is %s", it->data);
             if(strcmp(it->next->data, it->data) < 1) {
-                printf("should switch %s with %s", it->next->data, it->data);
+                //printf("should switch %s with %s", it->next->data, it->data);
                 char *tmp = strdup(it->data);
                 char *tmp2 = strdup(it->next->data);
                 it->next->data = tmp;
@@ -107,6 +120,8 @@ void list_selection_sort(struct node **head) {
 
 int sorted(const struct node *head) {
     while(head->next != NULL) {
+        int keepSorting = twoStrCompr(head->data, head->next->data);
+        printf("is %s smaller than %s (0->no | 1->yes)? %d\n", head->data, head->next->data, keepSorting);
         if(strcmp(head->data, head->next->data) > 0) {
             return 0;
         }
